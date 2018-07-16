@@ -1,0 +1,34 @@
+USE Dictionar
+
+IF EXISTS (SELECT * FROM sys.tables WHERE Name = 'Users')
+DROP TABLE Users
+
+CREATE TABLE Users
+(
+	ID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Username VARCHAR(20) NOT NULL UNIQUE,
+	[Password] VARCHAR(20) NOT NULL,
+	[Type] VARCHAR(20) NOT NULL DEFAULT 'Unauthorized',
+	CHECK ([Type] IN ('Administrator','Authorized','Unauthorized'))
+);
+
+IF EXISTS (SELECT * FROM sys.tables WHERE Name = 'Categories')
+DROP TABLE Categories
+
+CREATE TABLE Categories
+(
+	ID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Category VARCHAR(20) NOT NULL UNIQUE
+);
+
+IF EXISTS (SELECT * FROM sys.tables WHERE Name = 'Dictionary')
+DROP TABLE Dictionary
+
+CREATE TABLE Dictionary
+(
+	ID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Word VARCHAR(20) NOT NULL UNIQUE,
+	Explanation VARCHAR(255) DEFAULT '',
+	Category INT NOT NULL FOREIGN KEY REFERENCES Categories(ID) ON DELETE CASCADE ON UPDATE CASCADE,
+	[Views] INT NOT NULL DEFAULT 0
+);
